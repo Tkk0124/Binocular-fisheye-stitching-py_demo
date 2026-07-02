@@ -1,0 +1,90 @@
+{
+  "input": {
+    "left_path": "input/left.bmp",
+    "right_path": "input/right.bmp",
+    "lens_xlsx_path": "input/C48501B模组镜头-光学资料-20260417.xlsx"
+  },
+  "runtime": {
+    "output_root": "output",
+    "overwrite": true,
+    "save_debug_images": true,
+    "max_processing_side": 4000,
+    "self_test_mode": false
+  },
+  "preprocess": {
+    "green_cast_correction": true,
+    "gray_world_white_balance": true,
+    "neutral_gray_white_balance": true,
+    "neutral_awb_strength": 1.0,
+    "neutral_sat_percentile": 35.0,
+    "neutral_value_low_percentile": 8.0,
+    "neutral_value_high_percentile": 96.0,
+    "contrast_preserve_chroma": true,
+    "percentile_clip_low": 0.2,
+    "percentile_clip_high": 99.8
+  },
+  "circle_detect": {
+    "black_threshold": 12,
+    "min_valid_area_ratio": 0.08,
+    "fit_mode": "enclosing",
+    "radius_shrink_px": 0,
+    "fallback_radius_ratio_to_short_side": 0.4687
+  },
+  "lens_model": {
+    "diagonal_fov_deg": 210.0,
+    "effective_pixel_pitch_um": 1.6,
+    "max_image_height_mm": 2.25,
+    "prefer_xlsx_lut": true,
+    "fallback_model": "equidistant",
+    "lut_samples": 1024
+  },
+  "projection": {
+    "pano_width": 2048,
+    "pano_height": 1024,
+    "interpolation": "linear",
+    "border_mode": "constant",
+    "border_value": 0,
+    "image_y_sign": -1
+  },
+  "pose": {
+    "left_yaw_deg": 0.0,
+    "left_pitch_deg": 0.0,
+    "left_roll_deg": 0.0,
+    "right_yaw_deg": 180.0,
+    "right_pitch_deg": 0.0,
+    "right_roll_deg": 0.0
+  },
+  "overlap": {
+    "min_component_area": 2000,
+    "strip_vertical_center_ratio": 0.5,
+    "strip_vertical_height_ratio": 0.5,
+    "side_strip_width_ratio": 0.125
+  },
+  "evaluation": {
+    "edge_weight": 0.55,
+    "color_weight": 0.35,
+    "gradient_weight": 0.10
+  },
+  "pattern": {
+    "enable_chessboard_detection": true,
+    "chessboard_patterns": [[11, 8], [10, 7], [9, 6], [8, 6], [7, 5]],
+    "min_corners": 20
+  },
+  "seam": {
+    "method": "dp",
+    "smooth_penalty": 0.12,
+    "edge_penalty": 0.35,
+    "invalid_cost": 1000000.0,
+    "component_padding_px": 6
+  },
+  "blend": {
+    "method": "multiband",
+    "feather_radius_px": 24,
+    "multiband_levels": 5
+  },
+  "fallback_local_compensation": {
+    "enabled": false,
+    "max_shift_px": 20,
+    "min_response": 0.08
+  }
+}

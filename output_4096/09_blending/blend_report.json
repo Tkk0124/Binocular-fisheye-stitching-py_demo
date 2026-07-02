@@ -1,0 +1,6 @@
+{
+  "method": "multiband",
+  "final_image": "output_4096\\09_blending\\final_multiband.png",
+  "feather_radius_px": 24,
+  "multiband_levels": 5
+}

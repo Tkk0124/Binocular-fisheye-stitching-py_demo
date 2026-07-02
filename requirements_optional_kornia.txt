@@ -1,0 +1,7 @@
+# Optional differentiable-geometry / PyTorch extension stack.
+# Not required by the current deterministic pipeline.
+# Use this only if you want to prototype differentiable pose/LUT optimization.
+-r requirements.txt
+# Kornia latest releases are PyTorch-based and currently require Python >=3.11 on PyPI.
+torch
+kornia

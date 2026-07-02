@@ -1,0 +1,104 @@
+{
+  "parsed_lens_xlsx": {
+    "source": "/mnt/data/C48501B模组镜头-光学资料-20260417.xlsx",
+    "found": true,
+    "angle_height_table": [
+      {
+        "angle_deg": 0.0,
+        "height_mm": 0.06704447
+      },
+      {
+        "angle_deg": 0.05,
+        "height_mm": 0.1107
+      },
+      {
+        "angle_deg": 0.0742,
+        "height_mm": 0.114619618528609
+      },
+      {
+        "angle_deg": 0.0808,
+        "height_mm": 0.131458994491973
+      },
+      {
+        "angle_deg": 0.0871,
+        "height_mm": 0.14941990796803
+      },
+      {
+        "angle_deg": 0.0933,
+        "height_mm": 0.168618263810597
+      },
+      {
+        "angle_deg": 0.0992,
+        "height_mm": 0.189186507524649
+      },
+      {
+        "angle_deg": 0.1,
+        "height_mm": 0.2214
+      },
+      {
+        "angle_deg": 0.1103,
+        "height_mm": 0.235064207879292
+      },
+      {
+        "angle_deg": 0.1107,
+        "height_mm": 2.02
+      },
+      {
+        "angle_deg": 0.1895,
+        "height_mm": 2.36790687575356
+      },
+      {
+        "angle_deg": 0.2214,
+        "height_mm": 4.07
+      },
+      {
+        "angle_deg": 0.514,
+        "height_mm": 4.07323292
+      },
+      {
+        "angle_deg": 0.5364,
+        "height_mm": 4.42521695
+      },
+      {
+        "angle_deg": 0.5587,
+        "height_mm": 4.78867633
+      },
+      {
+        "angle_deg": 2.0337,
+        "height_mm": 4.9595925
+      }
+    ],
+    "facts": {
+      "pixel_candidates": [
+        8000.0,
+        586.0,
+        1.0,
+        2.0,
+        6000.0,
+        0.8,
+        8000.0
+      ],
+      "efl_candidates": [
+        1.2,
+        1.2,
+        409.090909090909
+      ],
+      "height_candidates": [
+        3.2,
+        2.4,
+        210.0,
+        2.25,
+        4.0
+      ]
+    },
+    "notes": []
+  },
+  "average_detected_radius_px": 1352.4164823402573,
+  "radial_lut_summary": {
+    "source": "fallback_equidistant",
+    "theta_max_deg": 105.0,
+    "first_radius_px": 0.0,
+    "last_radius_px": 1352.41650390625,
+    "samples": 1024
+  }
+}

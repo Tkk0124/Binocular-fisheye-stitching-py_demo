@@ -1,0 +1,29 @@
+{
+  "components": [
+    {
+      "component": 0,
+      "bbox": [
+        186,
+        122,
+        140,
+        268
+      ],
+      "seam_x_mean": 48.05223880597015,
+      "seam_x_min": 29,
+      "seam_x_max": 67
+    },
+    {
+      "component": 1,
+      "bbox": [
+        698,
+        122,
+        140,
+        268
+      ],
+      "seam_x_mean": 85.86194029850746,
+      "seam_x_min": 75,
+      "seam_x_max": 102
+    }
+  ],
+  "method": "dp_vertical"
+}

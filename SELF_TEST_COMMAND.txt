@@ -1,0 +1,1 @@
+python run_pipeline.py --left /mnt/data/left.bmp --right /mnt/data/right.bmp --lens-xlsx /mnt/data/C48501B模组镜头-光学资料-20260417.xlsx --output /mnt/data/fisheye_sphere_pipeline_selftest --pano-width 1024 --pano-height 512

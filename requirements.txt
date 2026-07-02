@@ -1,0 +1,4 @@
+# Core runtime dependencies for the deterministic NumPy/OpenCV pipeline.
+# Note: install only one OpenCV Python package in the environment.
+numpy>=1.23
+opencv-contrib-python>=4.8

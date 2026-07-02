@@ -1,0 +1,27 @@
+{
+  "enabled": true,
+  "components": [
+    {
+      "component": 0,
+      "bbox": [
+        768,
+        512,
+        512,
+        1024
+      ],
+      "left_found": false,
+      "right_found": false
+    },
+    {
+      "component": 1,
+      "bbox": [
+        2816,
+        512,
+        512,
+        1024
+      ],
+      "left_found": false,
+      "right_found": false
+    }
+  ]
+}

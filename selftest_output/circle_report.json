@@ -1,0 +1,17 @@
+{
+  "left_circle": {
+    "cx": 1956.3986019546076,
+    "cy": 1418.7191612392107,
+    "radius": 1341.8191075955947,
+    "method": "contour_circle_fit",
+    "contour_area": 5762638.0
+  },
+  "right_circle": {
+    "cx": 2120.8119543307685,
+    "cy": 1305.1748031957595,
+    "radius": 1363.01385708492,
+    "method": "contour_circle_fit",
+    "contour_area": 6032772.5
+  },
+  "radius_shrink_px": 4.0
+}
