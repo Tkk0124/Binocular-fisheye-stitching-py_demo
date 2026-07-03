@@ -7,7 +7,7 @@ import cv2
 import numpy as np
 
 from common.io_utils import ensure_dir, read_image_bgr, write_image, write_json
-from common.image_utils import draw_circle_overlay, make_circle_mask, non_black_mask
+from common.image_utils import make_circle_mask, non_black_mask
 
 
 def detect_circle(img_bgr, black_threshold: int, min_valid_area_ratio: float, fallback_radius_ratio: float, fit_mode: str = 'enclosing') -> Dict[str, float]:
@@ -55,26 +55,64 @@ def detect_circle(img_bgr, black_threshold: int, min_valid_area_ratio: float, fa
     return result
 
 
+def effective_circle(circle: Dict[str, float], shrink_px: float) -> Dict[str, float]:
+    out = circle.copy()
+    out['radius'] = max(1.0, float(circle['radius']) - float(shrink_px))
+    out['method'] = f"{circle.get('method', 'unknown')}_effective"
+    out['raw_radius'] = float(circle['radius'])
+    out['radius_shrink_px'] = float(shrink_px)
+    return out
+
+
+def draw_raw_effective_overlay(img_bgr, raw_circle: Dict[str, float], effective: Dict[str, float]):
+    out = img_bgr.copy()
+    raw_center = (int(round(raw_circle['cx'])), int(round(raw_circle['cy'])))
+    eff_center = (int(round(effective['cx'])), int(round(effective['cy'])))
+    cv2.circle(out, raw_center, int(round(raw_circle['radius'])), (0, 255, 255), 3, cv2.LINE_AA)
+    cv2.circle(out, eff_center, int(round(effective['radius'])), (0, 255, 0), 3, cv2.LINE_AA)
+    cv2.drawMarker(out, raw_center, (0, 0, 255), cv2.MARKER_CROSS, 40, 2)
+    if raw_center != eff_center:
+        cv2.drawMarker(out, eff_center, (255, 0, 0), cv2.MARKER_CROSS, 40, 2)
+    cv2.putText(out, 'raw', (raw_center[0] + 16, raw_center[1] - 18), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2)
+    cv2.putText(out, 'effective', (eff_center[0] + 16, eff_center[1] + 32), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+    return out
+
+
 def run(ctx: Dict, cfg: Dict) -> Dict:
     out_dir = ensure_dir(Path(ctx['output_root']) / '02_circle_detect')
     c = cfg['circle_detect']
     left = read_image_bgr(ctx['left_preprocessed'])
     right = read_image_bgr(ctx['right_preprocessed'])
     fit_mode = c.get('fit_mode', 'enclosing')
-    left_circle = detect_circle(left, c.get('black_threshold', 12), c.get('min_valid_area_ratio', 0.08), c.get('fallback_radius_ratio_to_short_side', 0.4687), fit_mode)
-    right_circle = detect_circle(right, c.get('black_threshold', 12), c.get('min_valid_area_ratio', 0.08), c.get('fallback_radius_ratio_to_short_side', 0.4687), fit_mode)
+    left_circle_raw = detect_circle(left, c.get('black_threshold', 12), c.get('min_valid_area_ratio', 0.08), c.get('fallback_radius_ratio_to_short_side', 0.4687), fit_mode)
+    right_circle_raw = detect_circle(right, c.get('black_threshold', 12), c.get('min_valid_area_ratio', 0.08), c.get('fallback_radius_ratio_to_short_side', 0.4687), fit_mode)
     shrink = float(c.get('radius_shrink_px', 4))
-    left_mask = make_circle_mask(left.shape[:2], left_circle, shrink)
-    right_mask = make_circle_mask(right.shape[:2], right_circle, shrink)
-    write_image(out_dir / 'left_circle_overlay.png', draw_circle_overlay(left, left_circle))
-    write_image(out_dir / 'right_circle_overlay.png', draw_circle_overlay(right, right_circle))
+    left_circle_effective = effective_circle(left_circle_raw, shrink)
+    right_circle_effective = effective_circle(right_circle_raw, shrink)
+    left_mask = make_circle_mask(left.shape[:2], left_circle_effective, 0)
+    right_mask = make_circle_mask(right.shape[:2], right_circle_effective, 0)
+    write_image(out_dir / 'left_circle_overlay.png', draw_raw_effective_overlay(left, left_circle_raw, left_circle_effective))
+    write_image(out_dir / 'right_circle_overlay.png', draw_raw_effective_overlay(right, right_circle_raw, right_circle_effective))
     write_image(out_dir / 'left_valid_circle_mask.png', left_mask)
     write_image(out_dir / 'right_valid_circle_mask.png', right_mask)
-    report = {'left_circle': left_circle, 'right_circle': right_circle, 'radius_shrink_px': shrink, 'fit_mode': fit_mode}
+    report = {
+        'left_circle_raw': left_circle_raw,
+        'right_circle_raw': right_circle_raw,
+        'left_circle_effective': left_circle_effective,
+        'right_circle_effective': right_circle_effective,
+        'left_circle': left_circle_effective,
+        'right_circle': right_circle_effective,
+        'radius_shrink_px': shrink,
+        'fit_mode': fit_mode
+    }
     write_json(out_dir / 'circle_report.json', report)
     ctx.update({
-        'left_circle': left_circle,
-        'right_circle': right_circle,
+        'left_circle_raw': left_circle_raw,
+        'right_circle_raw': right_circle_raw,
+        'left_circle_effective': left_circle_effective,
+        'right_circle_effective': right_circle_effective,
+        'left_circle': left_circle_effective,
+        'right_circle': right_circle_effective,
         'left_circle_mask': str(out_dir / 'left_valid_circle_mask.png'),
         'right_circle_mask': str(out_dir / 'right_valid_circle_mask.png'),
         'circle_report': str(out_dir / 'circle_report.json')

@@ -17,7 +17,11 @@ def run(ctx: Dict, cfg: Dict) -> Dict:
     lut = build_radial_lut(cfg['lens_model'], avg_radius, parsed)
     report = {
         'parsed_lens_xlsx': parsed,
-        'average_detected_radius_px': avg_radius,
+        'average_effective_radius_px': avg_radius,
+        'left_circle_raw_radius_px': float(ctx.get('left_circle_raw', ctx['left_circle'])['radius']),
+        'right_circle_raw_radius_px': float(ctx.get('right_circle_raw', ctx['right_circle'])['radius']),
+        'left_circle_effective_radius_px': float(ctx['left_circle']['radius']),
+        'right_circle_effective_radius_px': float(ctx['right_circle']['radius']),
         'radial_lut_summary': {
             'source': lut['source'],
             'theta_max_deg': lut['theta_max_deg'],

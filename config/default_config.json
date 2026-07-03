@@ -27,7 +27,7 @@
     "black_threshold": 12,
     "min_valid_area_ratio": 0.08,
     "fit_mode": "enclosing",
-    "radius_shrink_px": 0,
+    "radius_shrink_px": 40,
     "fallback_radius_ratio_to_short_side": 0.4687
   },
   "lens_model": {
@@ -72,7 +72,28 @@
   },
   "pattern": {
     "enable_chessboard_detection": true,
-    "chessboard_patterns": [[11, 8], [10, 7], [9, 6], [8, 6], [7, 5]],
+    "chessboard_patterns": [
+      [
+        11,
+        8
+      ],
+      [
+        10,
+        7
+      ],
+      [
+        9,
+        6
+      ],
+      [
+        8,
+        6
+      ],
+      [
+        7,
+        5
+      ]
+    ],
     "min_corners": 20
   },
   "seam": {

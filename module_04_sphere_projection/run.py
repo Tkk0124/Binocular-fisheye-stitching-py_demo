@@ -35,6 +35,12 @@ def run(ctx: Dict, cfg: Dict) -> Dict:
     report = {
         'pano_width': W,
         'pano_height': H,
+        'left_circle_raw': ctx.get('left_circle_raw'),
+        'right_circle_raw': ctx.get('right_circle_raw'),
+        'left_circle_effective': ctx['left_circle'],
+        'right_circle_effective': ctx['right_circle'],
+        'left_projection_radius_px': float(ctx['left_circle']['radius']),
+        'right_projection_radius_px': float(ctx['right_circle']['radius']),
         'left_valid_ratio': float(np.count_nonzero(valid_l) / valid_l.size),
         'right_valid_ratio': float(np.count_nonzero(valid_r) / valid_r.size),
         'overlap_ratio': float(np.count_nonzero(both) / both.size),

@@ -1,6 +1,0 @@
-{
-  "method": "multiband",
-  "final_image": "/mnt/data/fisheye_sphere_pipeline_selftest/09_blending/final_multiband.png",
-  "feather_radius_px": 24,
-  "multiband_levels": 5
-}

@@ -10,6 +10,43 @@ from common.io_utils import ensure_dir, read_image_bgr, write_image, write_json
 from common.metrics import seam_energy_map, heatmap_u8, summarize_values, edge_map, gradient_mag
 
 
+def _clean_old_debug_outputs(out_dir: Path) -> None:
+    for pattern in (
+        'component_*.png',
+        'component_*_brightness_report.json',
+        'seam_energy_heatmap.png',
+        'edge_left.png',
+        'edge_right.png',
+        'color_absdiff.png',
+        'seam_energy.npy',
+        'overlap_evaluation_report.json',
+    ):
+        for path in out_dir.glob(pattern):
+            if path.is_file():
+                path.unlink()
+
+
+def _label_image(img: np.ndarray, label: str) -> np.ndarray:
+    out = img.copy()
+    cv2.rectangle(out, (0, 0), (min(out.shape[1], 360), 32), (0, 0, 0), -1)
+    cv2.putText(out, label, (8, 23), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (255, 255, 255), 2, cv2.LINE_AA)
+    return out
+
+
+def _side_by_side_labeled(items: Tuple[Tuple[str, np.ndarray], ...]) -> np.ndarray:
+    spacer = None
+    labeled = []
+    for label, img in items:
+        labeled_img = _label_image(img, label)
+        labeled.append(labeled_img)
+        if spacer is None:
+            spacer = np.full((labeled_img.shape[0], 8, 3), 255, dtype=np.uint8)
+    out = labeled[0]
+    for img in labeled[1:]:
+        out = np.hstack([out, spacer, img])
+    return out
+
+
 def _luma(img_bgr: np.ndarray) -> np.ndarray:
     img = img_bgr.astype(np.float32) / 255.0
     return 0.114 * img[:, :, 0] + 0.587 * img[:, :, 1] + 0.299 * img[:, :, 2]
@@ -82,6 +119,7 @@ def _make_luminance_cost_views(
 
 def run(ctx: Dict, cfg: Dict) -> Dict:
     out_dir = ensure_dir(Path(ctx['output_root']) / '06_overlap_evaluation')
+    _clean_old_debug_outputs(out_dir)
     left = read_image_bgr(ctx['left_sphere'])
     right = read_image_bgr(ctx['right_sphere'])
     overlap = cv2.imread(ctx['overlap_mask'], cv2.IMREAD_GRAYSCALE)
@@ -96,10 +134,11 @@ def run(ctx: Dict, cfg: Dict) -> Dict:
         raw_l = left[y:y+h, x:x+w]
         raw_r = right[y:y+h, x:x+w]
         m_crop = overlap[y:y+h, x:x+w]
-        write_image(out_dir / f'component_{idx:02d}_left_raw.png', raw_l)
-        write_image(out_dir / f'component_{idx:02d}_right_raw.png', raw_r)
+        write_image(out_dir / f'component_{idx:02d}_raw_pair.png', _side_by_side_labeled((
+            ('left raw', raw_l),
+            ('right raw', raw_r),
+        )))
         before_energy = seam_energy_map(raw_l, raw_r, m_crop, ev.get('color_weight', 0.35), ev.get('edge_weight', 0.55), ev.get('gradient_weight', 0.10))
-        write_image(out_dir / f'component_{idx:02d}_cost_before.png', heatmap_u8(before_energy))
 
         if enable_luma_norm:
             cost_l, cost_r, brightness_report = _make_luminance_cost_views(raw_l, raw_r, m_crop, ev)
@@ -121,9 +160,20 @@ def run(ctx: Dict, cfg: Dict) -> Dict:
         left_cost_view[y:y+h, x:x+w] = cost_l
         right_cost_view[y:y+h, x:x+w] = cost_r
         after_energy = seam_energy_map(cost_l, cost_r, m_crop, ev.get('color_weight', 0.35), ev.get('edge_weight', 0.55), ev.get('gradient_weight', 0.10))
-        write_image(out_dir / f'component_{idx:02d}_left_cost_view.png', cost_l)
-        write_image(out_dir / f'component_{idx:02d}_right_cost_view.png', cost_r)
-        write_image(out_dir / f'component_{idx:02d}_cost_after.png', heatmap_u8(after_energy))
+        right_diff = np.clip(cv2.absdiff(raw_r, cost_r).astype(np.float32) * 3.0, 0, 255).astype(np.uint8)
+        write_image(out_dir / f'component_{idx:02d}_right_luma_norm_compare.png', _side_by_side_labeled((
+            ('right raw', raw_r),
+            ('right cost view', cost_r),
+            ('absdiff x3', right_diff),
+        )))
+        before_heat = heatmap_u8(before_energy)
+        after_heat = heatmap_u8(after_energy)
+        heat_diff = np.clip(cv2.absdiff(before_heat, after_heat).astype(np.float32) * 3.0, 0, 255).astype(np.uint8)
+        write_image(out_dir / f'component_{idx:02d}_cost_before_after_compare.png', _side_by_side_labeled((
+            ('cost before', before_heat),
+            ('cost after', after_heat),
+            ('absdiff x3', heat_diff),
+        )))
         write_json(out_dir / f'component_{idx:02d}_brightness_report.json', brightness_report)
         component_reports.append({'component': idx, 'bbox': [x, y, w, h], 'brightness': brightness_report})
 
