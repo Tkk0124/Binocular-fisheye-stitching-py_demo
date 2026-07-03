@@ -2137,6 +2137,7 @@
   ],
   "pose_overlap_report": "output_4096\\05_pose_overlap\\pose_overlap_report.json",
   "seam_energy_map": "output_4096\\06_overlap_evaluation\\seam_energy_heatmap.png",
+  "seam_energy_npy": "output_4096\\06_overlap_evaluation\\seam_energy.npy",
   "overlap_evaluation_report": "output_4096\\06_overlap_evaluation\\overlap_evaluation_report.json",
   "pattern_evaluation_report": "output_4096\\07_pattern_evaluation\\pattern_evaluation_report.json",
   "selector_left_mask": "output_4096\\08_seam_graphcut_dp\\selector_left_mask.png",

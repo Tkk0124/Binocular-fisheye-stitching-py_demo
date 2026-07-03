@@ -1,0 +1,11 @@
+{
+  "median_left_before": 0.27244317531585693,
+  "median_right_before": 0.18386666476726532,
+  "ratio_before": 0.6748807877242641,
+  "gain_right_to_left": 1.4817431732973998,
+  "median_left_after": 0.27244317531585693,
+  "median_right_after": 0.2704627513885498,
+  "ratio_after": 0.9927308734197099,
+  "valid_pixel_count": 350231,
+  "skipped": false
+}

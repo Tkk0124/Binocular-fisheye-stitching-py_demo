@@ -58,14 +58,18 @@ def run(ctx: Dict, cfg: Dict) -> Dict:
     overlap = cv2.bitwise_and(vl, vr)
     se = cfg['seam']
     ev = cfg['evaluation']
-    energy = seam_energy_map(left, right, overlap, ev.get('color_weight', 0.35), ev.get('edge_weight', 0.55), ev.get('gradient_weight', 0.10))
+    energy_path = ctx.get('seam_energy_npy')
+    if energy_path:
+        energy = np.load(energy_path).astype(np.float32)
+    else:
+        energy = seam_energy_map(left, right, overlap, ev.get('color_weight', 0.35), ev.get('edge_weight', 0.55), ev.get('gradient_weight', 0.10))
 
     H, W = overlap.shape
     selector_left = np.zeros((H, W), dtype=np.uint8)
     selector_left[(vl > 0) & (vr == 0)] = 255
     selector_left[(vl > 0) & (vr > 0)] = 255  # initial; overwritten by seam components
 
-    report = {'components': [], 'method': 'dp_vertical'}
+    report = {'components': [], 'method': 'dp_vertical', 'energy_source': energy_path or 'module_08_legacy_recomputed'}
     overlay = cv2.addWeighted(left, 0.5, right, 0.5, 0)
     pad = int(se.get('component_padding_px', 6))
     smooth = float(se.get('smooth_penalty', 0.12))

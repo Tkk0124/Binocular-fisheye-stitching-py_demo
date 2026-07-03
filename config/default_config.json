@@ -63,7 +63,12 @@
   "evaluation": {
     "edge_weight": 0.55,
     "color_weight": 0.35,
-    "gradient_weight": 0.10
+    "gradient_weight": 0.10,
+    "enable_luminance_normalization": true,
+    "gain_clip_min": 0.5,
+    "gain_clip_max": 2.0,
+    "valid_luma_min": 0.03,
+    "valid_luma_max": 0.95
   },
   "pattern": {
     "enable_chessboard_detection": true,

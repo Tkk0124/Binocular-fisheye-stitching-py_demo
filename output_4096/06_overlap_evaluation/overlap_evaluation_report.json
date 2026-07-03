@@ -1,13 +1,14 @@
 {
   "energy": {
     "count": 3299536,
-    "mean": 0.06277137249708176,
-    "rms": 0.1143728494644165,
-    "p95": 0.20795583724975586,
+    "mean": 0.06269925832748413,
+    "rms": 0.11612851917743683,
+    "p95": 0.20891627669334412,
     "max": 1.0
   },
   "overlap_valid_pixels": 3299536,
   "overlap_valid_ratio": 0.39333534240722656,
+  "enable_luminance_normalization": true,
   "components": [
     {
       "component": 0,
@@ -19,9 +20,9 @@
       ],
       "energy": {
         "count": 393684,
-        "mean": 0.10289521515369415,
-        "rms": 0.15966728329658508,
-        "p95": 0.2896274924278259,
+        "mean": 0.1036348044872284,
+        "rms": 0.1635732352733612,
+        "p95": 0.2831140458583832,
         "max": 1.0
       }
     },
@@ -35,10 +36,52 @@
       ],
       "energy": {
         "count": 393684,
-        "mean": 0.11096572130918503,
-        "rms": 0.19097082316875458,
-        "p95": 0.3456585109233856,
+        "mean": 0.11732331663370132,
+        "rms": 0.20180918276309967,
+        "p95": 0.3666328489780426,
         "max": 1.0
+      }
+    }
+  ],
+  "brightness_components": [
+    {
+      "component": 0,
+      "bbox": [
+        768,
+        512,
+        512,
+        1024
+      ],
+      "brightness": {
+        "median_left_before": 0.27244317531585693,
+        "median_right_before": 0.18386666476726532,
+        "ratio_before": 0.6748807877242641,
+        "gain_right_to_left": 1.4817431732973998,
+        "median_left_after": 0.27244317531585693,
+        "median_right_after": 0.2704627513885498,
+        "ratio_after": 0.9927308734197099,
+        "valid_pixel_count": 350231,
+        "skipped": false
+      }
+    },
+    {
+      "component": 1,
+      "bbox": [
+        2816,
+        512,
+        512,
+        1024
+      ],
+      "brightness": {
+        "median_left_before": 0.19882746040821075,
+        "median_right_before": 0.15989020466804504,
+        "ratio_before": 0.8041656033818266,
+        "gain_right_to_left": 1.2435249602751153,
+        "median_left_after": 0.19882746040821075,
+        "median_right_after": 0.19563138484954834,
+        "ratio_after": 0.9839253815740513,
+        "valid_pixel_count": 314349,
+        "skipped": false
       }
     }
   ]

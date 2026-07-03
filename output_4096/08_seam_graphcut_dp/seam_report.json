@@ -8,9 +8,9 @@
         524,
         1036
       ],
-      "seam_x_mean": 115.9942084942085,
-      "seam_x_min": 101,
-      "seam_x_max": 133
+      "seam_x_mean": 128.22779922779924,
+      "seam_x_min": 115,
+      "seam_x_max": 140
     },
     {
       "component": 1,
@@ -20,10 +20,11 @@
         524,
         1036
       ],
-      "seam_x_mean": 398.0299227799228,
-      "seam_x_min": 358,
-      "seam_x_max": 442
+      "seam_x_mean": 398.3243243243243,
+      "seam_x_min": 363,
+      "seam_x_max": 444
     }
   ],
-  "method": "dp_vertical"
+  "method": "dp_vertical",
+  "energy_source": "output_4096\\06_overlap_evaluation\\seam_energy.npy"
 }
