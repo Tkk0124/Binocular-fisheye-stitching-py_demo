@@ -32,6 +32,11 @@ def run(ctx: Dict, cfg: Dict) -> Dict:
     overlay = cv2.addWeighted(sphere_l, 0.5, sphere_r, 0.5, 0)
     overlay[both == 0] = (overlay[both == 0] * 0.35).astype(np.uint8)
     write_image(out_dir / 'sphere_overlap_overlay.png', overlay)
+
+    lut = ctx['radial_lut']
+    full_theta_max_deg = float(lut.get('full_theta_max_deg', lut['theta_max_deg']))
+    effective_theta_max_deg = float(lut.get('effective_theta_max_deg', lut['theta_max_deg']))
+
     report = {
         'pano_width': W,
         'pano_height': H,
@@ -41,6 +46,10 @@ def run(ctx: Dict, cfg: Dict) -> Dict:
         'right_circle_effective': ctx['right_circle'],
         'left_projection_radius_px': float(ctx['left_circle']['radius']),
         'right_projection_radius_px': float(ctx['right_circle']['radius']),
+        'full_theta_max_deg': full_theta_max_deg,
+        'full_fov_deg': float(lut.get('full_fov_deg', 2.0 * full_theta_max_deg)),
+        'effective_theta_max_deg_used': effective_theta_max_deg,
+        'effective_fov_deg_used': float(lut.get('effective_fov_deg', 2.0 * effective_theta_max_deg)),
         'left_valid_ratio': float(np.count_nonzero(valid_l) / valid_l.size),
         'right_valid_ratio': float(np.count_nonzero(valid_r) / valid_r.size),
         'overlap_ratio': float(np.count_nonzero(both) / both.size),

@@ -51,7 +51,8 @@ def build_radial_lut(lens_cfg: Dict, circle_radius_px: float, parsed_xlsx: Dict 
                 pitch_um = float(lens_cfg.get('effective_pixel_pitch_um', 1.6))
                 pitch_mm = pitch_um * 1e-3
                 tab_r = tab_h / max(pitch_mm, 1e-9)
-                # Normalize to detected circle radius. This is robust if the source image was scaled.
+                # Normalize the complete lens table to the detected raw circle radius.
+                # Effective-radius trimming is applied later by inverse-looking up theta from this LUT.
                 if tab_r.max() > 0:
                     tab_r = tab_r / tab_r.max() * float(circle_radius_px)
                 max_a = float(min(theta_max, tab_a.max()))
@@ -66,6 +67,14 @@ def build_radial_lut(lens_cfg: Dict, circle_radius_px: float, parsed_xlsx: Dict 
         'angles_deg': angles.tolist(),
         'radii_px': radii.tolist(),
     }
+
+
+def radius_to_theta_deg(radius_px: float, lut: Dict[str, object]) -> float:
+    angles = np.asarray(lut['angles_deg'], dtype=np.float32)
+    radii = np.asarray(lut['radii_px'], dtype=np.float32)
+    if len(angles) == 0 or len(radii) == 0 or len(angles) != len(radii):
+        raise ValueError('invalid radial LUT')
+    return float(np.interp(float(radius_px), radii, angles))
 
 
 def _interp_radius(theta_deg: np.ndarray, lut: Dict[str, object]) -> np.ndarray:
@@ -94,7 +103,7 @@ def make_fisheye_remap(width: int, height: int, circle: Dict[str, float], radial
     ray_cam = (pose_cam_to_global.T @ ray_global.T).T
     z = np.clip(ray_cam[:, 2], -1.0, 1.0)
     theta = np.degrees(np.arccos(z)).astype(np.float32)
-    theta_max = float(radial_lut['theta_max_deg'])
+    theta_max = float(radial_lut.get('effective_theta_max_deg', radial_lut['theta_max_deg']))
     valid = theta <= theta_max
     r = _interp_radius(theta, radial_lut)
     xy_norm = np.sqrt(np.maximum(ray_cam[:, 0] ** 2 + ray_cam[:, 1] ** 2, 1e-12))
